@@ -1,0 +1,193 @@
+/*
+* Copyright (c) 2009 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:
+*
+*/
+HOWTO for Wins Ethernet Driver
+
+0. Pre-requisities
+The implementation of Wins Ethernet driver makes use of packet capturing library: 
+WinPcap, Release 2.2. This software sets the network card of the PC, on which Epoc 
+Emulator is working, into so called promiscuous mode. The user must be confident that 
+the environment she/he works in doesn’t forbid such settings. The quickest way 
+to ensure about it is to contact network administrator.
+
+
+1. Trouble Shooting
+The following problems may occur when attempting to use WINS version of Ethernet driver:
+* Network application doesn’t send nor receive any packets: two potential reasons:
+  - bad settings in CommDB - refer to point 4
+  - Wpcap not installed - refer to point 2
+
+* A panic is raised of category: 'D32ETHER' with one of the following reasons:
+   1	meaning: bad MAC address in ini file or entry for it missing or ini file missing
+   2	meaning: entry for network interface name missing in ini file or ini file missing
+   3	meaning: Wpcap couldn't be initialised - potentially not installed or name 
+	of network interface in .ini file wrong
+Panics occur if system is not configured properly, remedy can be found in notes below.
+
+* Wpcap error may occur - refer to http://winpcap.polito.it/misc/changelog.htm 
+  for advice how to fix the problem (this will require usually upgrading WinPcap 
+  package on user'’ machine).
+
+
+2. Wpcap
+Wpcap must be installed on a machine that wishes to use driver. Installation is simple: 
+WinPcap.exe (located in: \epoc32\tools)
+should be run and then instructions should be followed. 
+If user has already Wpcap installed on his workstation then should try to use 
+Ethernet driver with this version. In case when it fails he must uninstall existing 
+Wpcap and install the one from Epoc directory mentioned above.
+
+
+3. Netcards
+When Wpcap is already installed, a program called Netcards.exe should be run. 
+It can be found in \epoc32\tools. 
+(Note: Netcards uses Wpcap so the latter must be installed first). 
+It will request user to select network card. Netcards writes a few entries 
+into \epoc32\data\ethernet.ini file which are read by Epoc Emulator at startup 
+(ensure that \epoc32\data directory exists). In particular MAC address value for use 
+by Emulator is determined by the entry named 'ETHER_MAC' (it is recommended that 
+network administrator was aware of the value of MAC address written there and authorise 
+it if necessary; according to local conditions any other value preferred 
+by administrator can be written manually instead of the value written by Netcards). 
+Ethernet driver for WINS was originally 
+designed for use in Techview environment which uses ethernet.ini file. Other environments 
+(like Quartz) may use different .ini file (e.g. \epoc32\data\quartz.ini). A user can 
+still run Ethernet module in these environments provided that .ini files appropriate 
+for these environments contain entries written by netcards.exe to ethernet.ini - user can 
+simply copy them - they are easy to recognise as they begin with ‘ETHER_‘ prefix .
+
+
+4. CommDB
+CommDB settings should indicate use of the NIF: ethint.nif and the agent: nullagt.agt. 
+In current release of Epoc Networking software, data in the database are written by program 
+called ced.exe, which takes wanted settings from text file: ced.cfg.
+Example settings to be put in this file are shown below. In the example it is assumed 
+that IP address and network mask will be acquired by DHCP protocol:
+
+############################################################
+## LANBearer
+## 
+[LANBearer]
+ADD_SECTION
+# COMMDB_ID = 1
+	Name=Wins Ethernet
+	Agent=nullagt.agt
+	IfName=ethint
+	LDDFilename=enet
+	LDDName=Ethernet
+	PDDFilename=ethernet
+	PDDName=Ethernet.Wins
+	PacketDriverName=EtherPkt.drv
+	LastSocketActivityTimeout=-1
+	LastSessionClosedTimeout=-1
+	LastSocketClosedTimeout=-1
+	FIELD_COUNT=8
+END_ADD
+
+ADD_SECTION
+# COMMDB_ID = 2
+	Name=Assabet on-board Ethernet
+	Agent=nullagt.agt
+	IfName=ethint
+	LDDFilename=enet
+	LDDName=Ethernet
+	PDDFilename=ethernet
+	PDDName=Ethernet.Assabet
+	PacketDriverName=EtherPkt.drv
+	LastSocketActivityTimeout=-1
+	LastSessionClosedTimeout=-1
+	LastSocketClosedTimeout=-1
+	FIELD_COUNT=8
+END_ADD
+
+############################################################
+## LANService
+## 
+[LANService]
+
+ADD_SECTION
+# COMMDB_ID = 1
+	Name=Ethernet
+	#IfNetworks=ip,ip6
+	IfNetworks=ip
+	IpNetMask=0.0.0.0
+	IpGateway=0.0.0.0
+	IpAddrFromServer=TRUE
+	IpAddr=0.0.0.0
+	IpDNSAddrFromServer=TRUE
+	IpNameServer1=0.0.0.0
+	IpNameServer2=0.0.0.0
+	FIELD_COUNT=9
+END_ADD
+
+
+############################################################
+## IAP
+## 
+[IAP]
+ADD_SECTION
+# COMMDB_ID = 1
+	Name=Ethernet IAP
+	IAPService=1
+	IAPServiceType=LANService
+	IAPBearer=1
+	IAPBearerType=LANBearer
+	IAPNetwork=1
+	IAPNetworkWeighting=0
+	Location=2
+	FIELD_COUNT=8
+END_ADD
+
+ADD_SECTION
+# COMMDB_ID = 2
+	Name=NT RAS with Null Modem
+	IAPService=2
+	IAPServiceType=DialOutISP
+	IAPBearer=2
+	IAPBearerType=ModemBearer
+	IAPNetwork=1
+	IAPNetworkWeighting=0
+	Location=2
+	FIELD_COUNT=8
+END_ADD
+
+############################################################
+## ConnectionPreferences
+## 
+[ConnectionPreferences]
+
+
+ADD_SECTION
+	Ranking=0
+	Direction=OUTGOING
+	DialogPref=PROMPT
+	BearerSet=LAN
+	#IAP=Ethernet IAP
+	IAP=1
+	FIELD_COUNT=5
+END_ADD
+
+ADD_SECTION
+	Ranking=1
+	Direction=OUTGOING
+	DialogPref=DONOTPROMPT
+	BearerSet=LAN
+#IAP=Ethernet IAP
+	IAP=1
+	FIELD_COUNT=5
+END_ADD
+
+ 
