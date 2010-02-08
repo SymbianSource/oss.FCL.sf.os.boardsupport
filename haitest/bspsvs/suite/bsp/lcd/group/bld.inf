@@ -35,34 +35,28 @@ t_screen_testdata.iby										/epoc32/rom/haitests/t_screen_testdata.iby
 ../testdata/base-bsp-screen-driver-modeless.ini				z:/base/screen/base-bsp-screen-driver-modeless.ini
 
 #if defined(TEST_DEVICE_H4HRP)
-../testdata/h4hrp/armv5/t_screen.ini						/epoc32/release/armv5/udeb/z/base/screen/t_screen.ini
-../testdata/h4hrp/armv5/t_screen.ini						/epoc32/release/armv5/urel/z/base/screen/t_screen.ini
-../testdata/h4hrp/armv5/t_screen.tcs						/epoc32/release/armv5/udeb/z/base/screen/t_screen.tcs
-../testdata/h4hrp/armv5/t_screen.tcs						/epoc32/release/armv5/urel/z/base/screen/t_screen.tcs
+../testdata/h4hrp/armv5/t_screen.ini						z:/base/screen/t_screen.ini
+../testdata/h4hrp/armv5/t_screen.tcs						z:/base/screen/t_screen.tcs
 #endif
 #if defined(TEST_DEVICE_H6HRP)
-../testdata/h6hrp/armv5/t_screen.ini						/epoc32/release/armv5/udeb/z/base/screen/t_screen.ini
-../testdata/h6hrp/armv5/t_screen.ini						/epoc32/release/armv5/urel/z/base/screen/t_screen.ini
-../testdata/h6hrp/armv5/t_screen.tcs						/epoc32/release/armv5/udeb/z/base/screen/t_screen.tcs
-../testdata/h6hrp/armv5/t_screen.tcs						/epoc32/release/armv5/urel/z/base/screen/t_screen.tcs
+../testdata/h6hrp/armv5/t_screen.ini						z:/base/screen/t_screen.ini
+../testdata/h6hrp/armv5/t_screen.tcs						z:/base/screen/t_screen.tcs
 #endif
 #if defined(TEST_DEVICE_DEVLON51)
-../testdata/devlon51/armv5/t_screen.ini						/epoc32/release/armv5/udeb/z/base/screen/t_screen.ini
-../testdata/devlon51/armv5/t_screen.ini						/epoc32/release/armv5/urel/z/base/screen/t_screen.ini
-../testdata/devlon51/armv5/t_screen.tcs						/epoc32/release/armv5/udeb/z/base/screen/t_screen.tcs
-../testdata/devlon51/armv5/t_screen.tcs						/epoc32/release/armv5/urel/z/base/screen/t_screen.tcs
+../testdata/devlon51/armv5/t_screen.ini						z:/base/screen/t_screen.ini
+../testdata/devlon51/armv5/t_screen.tcs						z:/base/screen/t_screen.tcs
 #endif
 #if defined(TEST_DEVICE_DEVLON52)
-../testdata/devlon52/armv5/t_screen.ini						/epoc32/release/armv5/udeb/z/base/screen/t_screen.ini
-../testdata/devlon52/armv5/t_screen.ini						/epoc32/release/armv5/urel/z/base/screen/t_screen.ini
-../testdata/devlon52/armv5/t_screen.tcs						/epoc32/release/armv5/udeb/z/base/screen/t_screen.tcs
-../testdata/devlon52/armv5/t_screen.tcs						/epoc32/release/armv5/urel/z/base/screen/t_screen.tcs
+../testdata/devlon52/armv5/t_screen.ini						z:/base/screen/t_screen.ini
+../testdata/devlon52/armv5/t_screen.tcs						z:/base/screen/t_screen.tcs
 #endif
 #if defined(TEST_DEVICE_MERLIN)
-../testdata/merlin/armv5/t_screen.ini						/epoc32/release/armv5/udeb/z/base/screen/t_screen.ini
-../testdata/merlin/armv5/t_screen.ini						/epoc32/release/armv5/urel/z/base/screen/t_screen.ini
-../testdata/merlin/armv5/t_screen.tcs						/epoc32/release/armv5/udeb/z/base/screen/t_screen.tcs
-../testdata/merlin/armv5/t_screen.tcs						/epoc32/release/armv5/urel/z/base/screen/t_screen.tcs
+../testdata/merlin/armv5/t_screen.ini						z:/base/screen/t_screen.ini
+../testdata/merlin/armv5/t_screen.tcs						z:/base/screen/t_screen.tcs
+#endif
+#if defined(TEST_DEVICE_SYBORG)
+../testdata/syborg/armv5/t_screen.ini						z:/base/screen/t_screen.ini
+../testdata/syborg/armv5/t_screen.tcs						z:/base/screen/t_screen.tcs
 #endif
 
 

@@ -18,6 +18,6 @@
 #include "../digitiser/group/bld.inf"
 #include "../uart/group/bld.inf"
 #include "../mmc/group/bld.inf"
-#include "../sound/group/bld.inf"
+//#include "../sound/group/bld.inf"
 #include "../keypad/group/bld.inf"
 #include "../usb/group/bld.inf"

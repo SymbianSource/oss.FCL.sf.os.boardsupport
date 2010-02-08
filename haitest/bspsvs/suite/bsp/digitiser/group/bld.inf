@@ -58,6 +58,11 @@ t_digitiser_testdata.iby							/epoc32/rom/haitests/t_digitiser_testdata.iby
 ../testdata/tube/t_digitiser.tcs						z:/base/digitiser/t_digitiser.tcs
 #endif
 
+#if defined(TEST_DEVICE_SYBORG)
+../testdata/syborg/t_digitiser.ini						z:/base/digitiser/t_digitiser.ini
+../testdata/syborg/t_digitiser.tcs						z:/base/digitiser/t_digitiser.tcs
+#endif
+
 
 PRJ_TESTMMPFILES
 t_digitiser.mmp

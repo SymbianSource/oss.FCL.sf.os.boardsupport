@@ -17,7 +17,6 @@
 #include "../../../group/device.cfg"
 
 PRJ_TESTEXPORTS
-//t_keypad.oby												/src/cedar/generic/base/e32/rombuild/t_keypad.oby
 t_keypad.oby												/sf/os/kernelhwsrv/kernel/eka/rombuild/t_keypad.oby
 t_keypad.oby												/epoc32/rom/haitests/t_keypad.oby
 t_keypad.iby												/epoc32/rom/haitests/t_keypad.iby
@@ -32,31 +31,28 @@ t_keypad_testdata.iby										/epoc32/rom/haitests/t_keypad_testdata.iby
 ../testdata/BASE-BSP-KEYPAD-DRIVER.ini						z:/base/keypad/base-bsp-keypad-driver.ini
 
 #if defined(TEST_DEVICE_H4HRP)
-../testdata/h4hrp/t_keypad.ini								/epoc32/release/armv5/udeb/z/base/keypad/t_keypad.ini
-../testdata/h4hrp/t_keypad.tcs								/epoc32/release/armv5/udeb/z/base/keypad/t_keypad.tcs
-../testdata/h4hrp/t_keypad.ini								/epoc32/release/armv5/urel/z/base/keypad/t_keypad.ini
-../testdata/h4hrp/t_keypad.tcs								/epoc32/release/armv5/urel/z/base/keypad/t_keypad.tcs
+../testdata/h4hrp/t_keypad.ini								z:/base/keypad/t_keypad.ini
+../testdata/h4hrp/t_keypad.tcs								z:/base/keypad/t_keypad.tcs
 #endif
 
 #if defined(TEST_DEVICE_H6HRP)
-../testdata/h6hrp/t_keypad.ini								/epoc32/release/armv5/udeb/z/base/keypad/t_keypad.ini
-../testdata/h6hrp/t_keypad.tcs								/epoc32/release/armv5/udeb/z/base/keypad/t_keypad.tcs
-../testdata/h6hrp/t_keypad.ini								/epoc32/release/armv5/urel/z/base/keypad/t_keypad.ini
-../testdata/h6hrp/t_keypad.tcs								/epoc32/release/armv5/urel/z/base/keypad/t_keypad.tcs
+../testdata/h6hrp/t_keypad.ini								z:/base/keypad/t_keypad.ini
+../testdata/h6hrp/t_keypad.tcs								z:/base/keypad/t_keypad.tcs
 #endif
 
 #if defined(TEST_DEVICE_DEVLON52)
-../testdata/devlon52/t_keypad.ini							/epoc32/release/armv5/udeb/z/base/keypad/t_keypad.ini
-../testdata/devlon52/t_keypad.tcs							/epoc32/release/armv5/udeb/z/base/keypad/t_keypad.tcs
-../testdata/devlon52/t_keypad.ini							/epoc32/release/armv5/urel/z/base/keypad/t_keypad.ini
-../testdata/devlon52/t_keypad.tcs							/epoc32/release/armv5/urel/z/base/keypad/t_keypad.tcs
+../testdata/devlon52/t_keypad.ini							z:/base/keypad/t_keypad.ini
+../testdata/devlon52/t_keypad.tcs							z:/base/keypad/t_keypad.tcs
 #endif
 
 #if defined(TEST_DEVICE_MERLIN)
-../testdata/merlin/t_keypad.ini								/epoc32/release/armv5/udeb/z/base/keypad/t_keypad.ini
-../testdata/merlin/t_keypad.tcs								/epoc32/release/armv5/udeb/z/base/keypad/t_keypad.tcs
-../testdata/merlin/t_keypad.ini								/epoc32/release/armv5/urel/z/base/keypad/t_keypad.ini
-../testdata/merlin/t_keypad.tcs								/epoc32/release/armv5/urel/z/base/keypad/t_keypad.tcs
+../testdata/merlin/t_keypad.ini								z:/base/keypad/t_keypad.ini
+../testdata/merlin/t_keypad.tcs								z:/base/keypad/t_keypad.tcs
+#endif
+
+#if defined(TEST_DEVICE_SYBORG)
+../testdata/syborg/t_keypad.ini								z:/base/keypad/t_keypad.ini
+../testdata/syborg/t_keypad.tcs								z:/base/keypad/t_keypad.tcs
 #endif
 
 PRJ_TESTMMPFILES

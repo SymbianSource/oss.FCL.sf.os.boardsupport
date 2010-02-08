@@ -36,6 +36,9 @@ PRJ_TESTEXPORTS
 #if defined(TEST_DEVICE_TUBE)
 ../tube/t_prompt.ini			/epoc32/data/z/base/t_prompt.ini
 #endif
+#if defined(TEST_DEVICE_SYBORG)
+../syborg/t_prompt.ini			/epoc32/data/z/base/t_prompt.ini
+#endif
 
 t_prompt.iby					/epoc32/rom/haitests/t_prompt.iby
 

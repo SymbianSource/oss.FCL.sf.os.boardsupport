@@ -36,7 +36,7 @@ SYSTEMINCLUDE	/epoc32/include/drivers
 SYSTEMINCLUDE	../inc	
 
 LIBRARY			epbusmmc.lib
-LIBRARY			epbussd.lib
+//LIBRARY			epbussd.lib
 
 epocallowdlldata
 
