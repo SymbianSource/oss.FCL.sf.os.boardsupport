@@ -21,8 +21,6 @@ WINS WINSCW
 PRJ_EXPORTS
 
 documentation/wins_ether_drv_howto.txt	/epoc32/engdoc/ethernet/	//
-estart/estart_nocaching.txt		/epoc32/release/winscw/udeb/z/sys/data/estart.txt
-estart/estart_nocaching.txt		/epoc32/release/winscw/urel/z/sys/data/estart.txt
 
 inc/variantmediadef.h					SYMBIAN_OS_LAYER_PLATFORM_EXPORT_PATH(wins/variantmediadef.h)		
 variant.mmh						SYMBIAN_OS_LAYER_PLATFORM_EXPORT_PATH(wins/variant.mmh)
