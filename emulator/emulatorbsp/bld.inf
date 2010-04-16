@@ -22,7 +22,6 @@ PRJ_EXPORTS
 
 documentation/wins_ether_drv_howto.txt	/epoc32/engdoc/ethernet/	//
 
-
 inc/variantmediadef.h					SYMBIAN_OS_LAYER_PLATFORM_EXPORT_PATH(wins/variantmediadef.h)		
 variant.mmh						SYMBIAN_OS_LAYER_PLATFORM_EXPORT_PATH(wins/variant.mmh)
 specific/winscomm.h					SYMBIAN_OS_LAYER_PLATFORM_EXPORT_PATH(wins/winscomm.h)
@@ -76,9 +75,9 @@ PRJ_EXTENSIONS
 start		extension		base/nand_fbr_offset
 
 #ifdef SYMBIAN_OLD_EXPORT_LOCATION
-option INC_PATH   /epoc32/include
+option INC_PATH   $(EPOCROOT)epoc32/include
 #else
-option INC_PATH  /epoc32/include/platform
+option INC_PATH  $(EPOCROOT)epoc32/include/platform
 #endif
 
 option		SRCDIR			$(EXTENSION_ROOT)/inc
