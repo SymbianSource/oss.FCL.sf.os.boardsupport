@@ -20,6 +20,8 @@ WINS WINSCW
 PRJ_EXPORTS
 
 PRJ_MMPFILES
+mediaext/d_nfe.mmp
+//nfe_med_ext/nfe_med_ext.mmp
 
 PRJ_TESTMMPFILES
 

@@ -57,4 +57,17 @@
 #define NAND_NUMMEDIA 1
 #define NAND_DRIVENAME "Nand"
 
+// Variant parameters for test NFE media extension driver 
+#define NFE_DRIVECOUNT 2
+#define NFE_DRIVELIST 1,5
+#define NFE_DRIVELETTERLIST 23,20			// EDRive? IDs of the each instance. (EDriveX,EDriveU from estart.txt)
+
+#define NFE_INSTANCE_COUNT 2				// the number of NFE media driver instances
+#define NFE_INSTANCE_DRIVE_COUNTS 1,1		// the number of drives in NFE_DRIVELIST for each instance of the driver
+
+// Variant parameters for production NFE media extension driver (same as NFE_DRIVELETTERLIST)
+#define NFE_INSTANCE_UI_DRIVE_ID 23,20			// EDRive? IDs of the each instance. (EDriveX,EDriveU from estart.txt)
+
+
+
 #endif
