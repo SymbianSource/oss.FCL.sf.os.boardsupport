@@ -86,3 +86,4 @@ EPointer3DEnterCloseProximityThreshold : set = 0
 EPointer3DExitCloseProximityThreshold : set = 0
 EDisplayMemoryHandle=GetDisplayMemoryHandle
 ENumCpus=GetNumCpus
+EDigitiserOrientation : set = DigitiserOrientation
