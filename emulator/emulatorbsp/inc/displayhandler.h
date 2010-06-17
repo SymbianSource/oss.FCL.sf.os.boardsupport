@@ -16,7 +16,7 @@
 /**
  @file
  @publishedPartner
- @prototype
+ @deprecated Emulator Deprecated
 */
 
 #ifndef __DISPLAYHANDLER_H__
