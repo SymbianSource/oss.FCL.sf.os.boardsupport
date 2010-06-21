@@ -20,7 +20,6 @@ WINS WINSCW
 
 PRJ_EXPORTS
 
-documentation/wins_ether_drv_howto.txt	/epoc32/engdoc/ethernet/	//
 
 inc/variantmediadef.h					SYMBIAN_OS_LAYER_PLATFORM_EXPORT_PATH(wins/variantmediadef.h)		
 variant.mmh						SYMBIAN_OS_LAYER_PLATFORM_EXPORT_PATH(wins/variant.mmh)
