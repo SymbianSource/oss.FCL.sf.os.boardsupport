@@ -1,4 +1,4 @@
-// Copyright (c) 1995-2009 Nokia Corporation and/or its subsidiary(-ies).
+// Copyright (c) 1995-2010 Nokia Corporation and/or its subsidiary(-ies).
 // All rights reserved.
 // This component and the accompanying materials are made available
 // under the terms of "Eclipse Public License v1.0"
@@ -4108,7 +4108,7 @@ TInt DMasterIni::DoXYHalFunction(TAny* aThis, TInt aFunction, TAny* a1, TAny* a2
 	return static_cast<DMasterIni*>(aThis)->XYHalFunction(aFunction,a1,a2);
 	}
 
-TInt DMasterIni::XYHalFunction(TInt aFunction, TAny* a1, TAny* /*a2*/)
+TInt DMasterIni::XYHalFunction(TInt aFunction, TAny* a1, TAny* a2)
 	{
 	TInt r=KErrNone;
 	switch(aFunction)
@@ -4129,6 +4129,28 @@ TInt DMasterIni::XYHalFunction(TInt aFunction, TAny* a1, TAny* /*a2*/)
 				r=KErrNotSupported;
 			}
 			break;
+			
+		// a2 = TBool aSet (ETrue for setting, EFalse for retrieval) 
+		// a1 = TDigitizerOrientation (set)
+		// a1 = &TDigitizerOrientation (get)
+		// Assume screen [0] here as this HAL function is only registered for
+		// screen 0 on the emulator platform. Function only called if display==0
+		case EDigitiserOrientation:	
+			if ((TBool)a2)
+				{
+				// Set the orientation attribute
+				// In case user thread, check it has WDD capability
+				if(!Kern::CurrentThreadHasCapability(ECapabilityWriteDeviceData,__PLATSEC_DIAGNOSTIC_STRING("Checked by Hal function EDigitiserOrientation")))
+					return KErrPermissionDenied;
+				systemIni->iScreens[0]->iXYOrientation = (TInt)a1;
+				}
+			else
+				{
+				// Get the orientation attribute, safe copy it into user memory
+				kumemput32(a1, &(systemIni->iScreens[0]->iXYOrientation), sizeof(TInt));	
+				}
+			break; 
+			
 		default:
 			r=KErrNotSupported;
 			break;

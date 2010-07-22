@@ -29,6 +29,7 @@ public:
 	/**
 	Returns the current emulator GUI configuration
 	@publishedPartner
+	@deprecated Emulator Deprecated
 	*/
 	IMPORT_C static TInt CurrentConfiguration();
 	};
