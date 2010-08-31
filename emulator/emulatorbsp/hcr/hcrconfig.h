@@ -25,7 +25,7 @@ the platform and not an exhustive list. The HCR is not intended to hold
 changes in the hardware consumer component. 
 
 @publishedPartner
-@prototype
+@deprecated Emulator Deprecated
 */
 
 #ifndef HCR_CONFIG_H
