@@ -24,7 +24,6 @@
 /**
 Defines the sector offset at which the FBR appears in the first block
 @publishedPartner
-@deprecated Emulator Deprecated
 */
 const TInt KNandFbrSectorOffset=0;
 

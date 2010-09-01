@@ -16,7 +16,7 @@
 /**
  @file
  @publishedPartner
- @deprecated Emulator Deprecated
+ @prototype
 */
 
 #ifndef __DISPLAY_CHAN_H__

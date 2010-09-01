@@ -45,7 +45,6 @@ Defining __USE_CUSTOM_ALLOCATOR enables the use of the NAND Flash Allocator.
 The following constants support relocation of the NAND FBR for this platform
 KNandFbrSectorOffset is the third of three constants required - it is defined in nand_fbr_offset.h
 @publishedPartner
-@deprecated Emulator Deprecated
 */
 const TInt KNandMinibootUsed		=	ETrue;
 const TInt KNandCoreldrRelocatable	=	ETrue;

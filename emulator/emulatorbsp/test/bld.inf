@@ -21,15 +21,16 @@ PRJ_EXPORTS
 
 PRJ_MMPFILES
 mediaext/d_nfe.mmp
-//nfe_med_ext/nfe_med_ext.mmp
 
 PRJ_TESTMMPFILES
 
 // Drivers
 ../../../../kernelhwsrv/kerneltest/e32test/group/d_tick					support
 ../../../../kernelhwsrv/kerneltest/e32test/group/bm_pdd					support
-../../../../kernelhwsrv/kerneltest/e32test/group/d_mstim				support
-d_frqchg										support
+../../../../kernelhwsrv/kerneltest/e32test/group/d_mstim					support
+
+// Tests
+../../../../kernelhwsrv/kerneltest/e32test/group/t_emul
 
 // Example RTOS personality
 ../../../../kernelhwsrv/kerneltest/e32test/personality/example/example_personality_test	support
