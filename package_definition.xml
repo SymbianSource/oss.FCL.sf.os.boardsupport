@@ -5,6 +5,9 @@
       <component id="emulatorbsp" name="Emulator BSP" purpose="optional">
         <unit bldFile="emulator/emulatorbsp" mrp="emulator/emulatorbsp/base_wins.mrp"/>
       </component>
+      <component id="emulatorbsptest" name="Emulator BSP Test" purpose="optional" filter="test">
+        <unit bldFile="emulator/emulatorbsp/test"/>
+      </component>
     </collection>
     <collection id="haitest" name="HAI Test Suites" level="test">
       <component id="bspsvs" name="BSP Verification Suite" introduced="^2" purpose="development">

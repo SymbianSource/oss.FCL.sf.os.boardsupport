@@ -23,15 +23,22 @@ PRJ_EXPORTS
 documentation/wins_ether_drv_howto.txt	/epoc32/engdoc/ethernet/	//
 
 inc/variantmediadef.h					SYMBIAN_OS_LAYER_PLATFORM_EXPORT_PATH(wins/variantmediadef.h)		
-variant.mmh						SYMBIAN_OS_LAYER_PLATFORM_EXPORT_PATH(wins/variant.mmh)
-specific/winscomm.h					SYMBIAN_OS_LAYER_PLATFORM_EXPORT_PATH(wins/winscomm.h)
+variant.mmh								SYMBIAN_OS_LAYER_PLATFORM_EXPORT_PATH(wins/variant.mmh)
+specific/winscomm.h						SYMBIAN_OS_LAYER_PLATFORM_EXPORT_PATH(wins/winscomm.h)
 specific/winscomm.inl					SYMBIAN_OS_LAYER_PLATFORM_EXPORT_PATH(wins/winscomm.inl)
 inc/nand_fbr_offset.h					SYMBIAN_OS_LAYER_PLATFORM_EXPORT_PATH(wins/nand/nand_fbr_offset.h)
-inc/winsgui.h						SYMBIAN_OS_LAYER_PLATFORM_EXPORT_PATH(wins/winsgui.h)
+inc/winsgui.h							SYMBIAN_OS_LAYER_PLATFORM_EXPORT_PATH(wins/winsgui.h)
 :zip emuldrives.zip
 wpdpack/drivers/winpcap.exe				/epoc32/tools/winpcap.exe	//
 wpdpack/lib/packet.lib					/epoc32/release/tools/udeb/packet.lib	//
 wpdpack/lib/wpcap.lib					/epoc32/release/tools/udeb/wpcap.lib	//
+
+emulatorlauncher/epoc.bat				/epoc32/tools/epoc.bat
+emulatorlauncher/epoc.pl				/epoc32/tools/epoc.pl
+emulatorlauncher/eshell.bat				/epoc32/tools/eshell.bat
+emulatorlauncher/eshell.pl				/epoc32/tools/eshell.pl
+emulatorlauncher/console.ini			/epoc32/data/console.ini
+emulatorlauncher/console.bmp			/epoc32/data/console.bmp
 
 PRJ_MMPFILES
 ../../../kernelhwsrv/kernel/eka/kernel/ekern
