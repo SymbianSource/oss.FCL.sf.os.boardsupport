@@ -307,27 +307,11 @@ TInt DWinsMMCStack::CreateBinFileForCard(TInt aCardNum,HANDLE* aHandle,TBool aCr
 		FILE_FLAG_RANDOM_ACCESS,					// DWORD dwFlagsAndAttributes
 			NULL);									// HANDLE hTemplateFile
 	
-	TInt fileSize = 0;
-	if (*aHandle!=INVALID_HANDLE_VALUE)
-	    {
-        fileSize = GetFileSize(*aHandle,NULL);
-        // Check whether MMC card force mount property is set.
-        // Force mount MMC card image regardless of whether the size of the image file is
-        // as specified in the epoc.ini.
-        // Specify "MMCCardForceMount 1" in the epoc.ini to enable force mount.
-        TBool forceMount = Property::GetBool("MMCCardForceMount");
-        if (forceMount && fileSize != INVALID_FILE_SIZE)
-            {
-            TInt sizeInKB = fileSize >> 10;
-            SetupDiskParms(sizeInKB);
-            TotalMDiskSize = fileSize;
-            }
-	    }
-
-	if (fileSize!=TotalMDiskSize)
+	TInt fileSize=GetFileSize(*aHandle,NULL);
+	if (fileSize>TotalMDiskSize)
 		//
 		// The Drive file already exists and size of emulated drive as configured in 
-		// epoc.ini has been changed. Musn't corrupt the emulated drive so delete the 
+		// epoc.ini has been reduced. Musn't corrupt the emulated drive so delete the 
 		// drive file and start from scratch. The emulated drive contents will be 
 		// erased.
 		//
@@ -395,21 +379,6 @@ TInt DWinsMMCStack::SetupSimulatedCard(TInt aCardNum)
 		delete cip;
 		return(err);
 		}
-	
-	TBool forceMount = Property::GetBool("MMCCardForceMount");
-	if (forceMount)
-	    {
-        // if Force Mount as image file size, CSIZE and CSIZE_MULT will be set 
-        // again inside the CreateBinFileForCard() call above.
-        cip->iForceMount = ETrue;
-        cip->iForceMountCSIZE = CSIZE;
-        cip->iForceMountCSIZE_MULT = CSIZE_MULT;
-	    }
-	else
-	    {
-        cip->iForceMountCSIZE = EFalse;
-	    }
-	
 	cip->iWinHandle=h;
 	iCardPool[aCardNum]=cip;
 	return(KErrNone);
@@ -1345,20 +1314,6 @@ void DWinsMMCMediaChange::MediaChangeCallBack(TAny *aPtr)
 
 void TWinsCardInfo::GetCSD(TUint8* aResp) const
 	{
-	TUint size;
-    TUint sizeMult;
-    
-    if (iForceMount)
-        {
-        size = iForceMountCSIZE;
-        sizeMult = iForceMountCSIZE_MULT;
-        }
-    else
-        {
-        size = DWinsMMCStack::CSIZE;
-        sizeMult = DWinsMMCStack::CSIZE_MULT;
-        }
-		
 	// Bits 127-96
 	TUint32 csd=(KCsdStructure<<30); 	/* CSD_STRUCTURE */
 	csd|=		(KCsdSpecVers<<26); 	/* SPEC_VERS */
@@ -1386,16 +1341,16 @@ void TWinsCardInfo::GetCSD(TUint8* aResp) const
 	csd|=		(0x0<<14);	/* WRITE_BLK_MISALIGN: No */  
 	csd|=		(0x0<<13);	/* READ_BLK_MISALIGN: No */  
 	csd|=		(0x0<<12);	/* DSR_IMP: No DSR */ 
-	csd|=		((size>>10&3)<<8);			/* C_SIZE: MMCSz Kb */
-	csd|=		((size>>2) & 0xFF);			/* C_SIZE: MMCSz Kb */
+	csd|=		((DWinsMMCStack::CSIZE>>10&3)<<8);			/* C_SIZE: MMCSz Kb */
+	csd|=		((DWinsMMCStack::CSIZE>>2) & 0xFF);			/* C_SIZE: MMCSz Kb */
 	TMMC::BigEndian4Bytes(&aResp[4],csd); 
 	// Bits 63-32
-	csd=		((size&3)<<30); 			/* C_SIZE: MMCSz Kb */
+	csd=		((DWinsMMCStack::CSIZE&3)<<30); 			/* C_SIZE: MMCSz Kb */
 	csd|=		(0x1<<27); 	/* VDD_R_CURR_MIN: 1mA */
 	csd|=		(0x1<<24);	/* VDD_R_CURR_MAX: 5mA */  
 	csd|=		(0x2<<21); 	/* VDD_W_CURR_MIN: 5mA */
 	csd|=		(0x3<<18);	/* VDD_W_CURR_MAX: 25mA */  
-	csd|=		((sizeMult&0x07)<<15);		/* C_SIZE_MULT: 0 */  
+	csd|=		((DWinsMMCStack::CSIZE_MULT&0x07)<<15);		/* C_SIZE_MULT: 0 */  
 	csd|=		(0x0<<10);	/* SECTOR_SIZE: 1 write block */  
 	csd|=		(0x0<<5);	/* ERASE_GRP_SIZE: 1 secotr */  
 	csd|=		(0x0);		/* WP_GRP_SIZE: 1 erase group */  

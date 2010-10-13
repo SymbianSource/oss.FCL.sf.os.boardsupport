@@ -52,10 +52,6 @@ public:
 	TMMCardStateEnum iState;			// Simulation of card's current state
 	HANDLE iWinHandle;
 	TRCA iRCA;
-	
-	TBool iForceMount;
-	TUint iForceMountCSIZE;             // mmc card size field
-	TUint iForceMountCSIZE_MULT;        // mmc card size field
 	};
 
 class DWinsMMCStack : public DMMCStack

@@ -435,16 +435,6 @@ TInt Wins::InitProperties(TBool aRunExe)
 		}
 	
 
-	// Get the name of the extension media drivers from epoc.ini (optional)
-	value = NULL;
-	iProperties.GetString("MediaExtensionDriver", value);
-	if (value)
-		{
-		if (iProperties.Append("Extension", value) == NULL)
-			return KErrNoMemory;		
-		}
-
-
 //	load additional configuration specific properties
 
 //	get the multi property "configuration"
