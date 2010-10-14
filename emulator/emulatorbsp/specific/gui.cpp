@@ -30,6 +30,8 @@
 
 #include "monitors.h"
 
+#include <kernel/sproperty.h>
+
 //Define these so that emulator generates varying values for gce stride and offset.
 //By default in emulator, stride is exactly right for display resolution and offset is zero
 //Setting these will identify code which incorrectly calculates these factors instead of requesting them
@@ -180,8 +182,21 @@ public:
 	TBool ProcessEventDfc(const TRawEvent* aEvent);
 	TBool	iStandby;
 	};
+	
+class DWinsGuiRotateHandler
+	{
+public:
+	static DWinsGuiRotateHandler* New();
+	TBool ProcessEventDfc(const TRawEvent* aEvent);
+
+private:
+	RPropertyRef iOrientationProperty;
+	};
 
 static DWinsGuiPowerHandler* WinsGuiPowerHandler;
+
+static DWinsGuiRotateHandler* WinsGuiRotateHandler;
+
 
 _LIT(KWinsGuiName, "WinsGui");
 
@@ -325,6 +340,54 @@ TBool DWinsGuiPowerHandler::ProcessEventDfc(const TRawEvent* aEvent)
 	return EFalse;
 	}
 
+DWinsGuiRotateHandler* DWinsGuiRotateHandler::New()
+	{
+	DWinsGuiRotateHandler* self = new DWinsGuiRotateHandler();
+	if (!self)
+		{	
+		__KTRACE_OPT(KEXTENSION,Kern::Printf("Failed to alloc DWinsGuiRotateHandler"));
+		return NULL;
+		}
+
+	// Publish startup mode property
+	_LIT_SECURITY_POLICY_PASS(readPolicy);
+	_LIT_SECURITY_POLICY_C1(writePolicy, ECapabilityWriteDeviceData);
+	
+	TInt r = self->iOrientationProperty.Attach(KUidSystemCategory, KSystemEmulatorOrientationKey);
+	if (r!=KErrNone)
+		{
+		delete self;
+		__KTRACE_OPT(KEXTENSION,Kern::Printf("DWinsGuiRotateHandler RPropertyRef::Attach Failed Err:%d", r));
+		return NULL;
+		}
+
+	r = self->iOrientationProperty.Define(RProperty::EInt, readPolicy, writePolicy);
+
+	return self;
+	}
+
+TBool DWinsGuiRotateHandler::ProcessEventDfc(const TRawEvent* aEvent)
+	{
+	//Obtain rotation from ScanCode.
+	TInt rotation = aEvent->ScanCode() - ESpecialKeyBase;
+	TInt r;
+	//Check this is a valid rotation and publish property.
+	if((rotation >= EEmulatorFlipRestore) && (rotation <= EEmulatorFlipRight))
+		{
+		if (aEvent->Type() == TRawEvent::EKeyDown)
+			{
+			Wins::Self()->WakeupEvent();
+			__KTRACE_OPT(KEXTENSION,Kern::Printf("Orientation change (%d) event:%x", rotation, aEvent->ScanCode()));
+			r = iOrientationProperty.Set(rotation);
+			__KTRACE_OPT(KEXTENSION, if (r != KErrNone) {Kern::Printf("RProperty::Set Failed Err:%d", r);});
+			}
+		// Swallow event
+		return ETrue;
+		}
+	return EFalse;
+	}
+
+	
 class EventQ
 	{
 	enum {ESize = 16};
@@ -379,8 +442,10 @@ void EventQ::Empty()
 	TRawEvent* pE = iQ;
 	for (;;)
 		{
-		if (!WinsGuiPowerHandler->ProcessEventDfc(pE)) 
-			Kern::AddEvent(*pE);
+		if (!WinsGuiRotateHandler->ProcessEventDfc(pE))
+			if (!WinsGuiPowerHandler->ProcessEventDfc(pE)) 
+				Kern::AddEvent(*pE);
+				
 		++pE;
 		irq = NKern::DisableAllInterrupts();
 		if (pE == iTail)
@@ -1252,6 +1317,7 @@ TInt DWinsUi::SetupProperties(TInt aId)
 	//params are rotation(int) and key(string)
 	if (pointer)
 		{
+		TInt i;
 		char * next;
 	
 		//skip any white space
@@ -1265,22 +1331,46 @@ TInt DWinsUi::SetupProperties(TInt aId)
 		switch (rotation)
 			{
 			case 0:
-				iScreens[0]->iScreenRotation = EEmulatorFlipRestore;
+				for (i = 0; i < screens; ++i)
+					{
+					iScreens[i]->iScreenRotation = EEmulatorFlipRestore;
+					iScreens[i]->iRotateBuffer = NULL;
+					}
 				break;
 			case 90:
-				iScreens[0]->iScreenRotation = EEmulatorFlipRight;
+				for (i = 0; i < screens; ++i)
+					{
+					iScreens[i]->iScreenRotation = EEmulatorFlipRight;
+					iScreens[i]->iRotateBuffer = (DWORD*)malloc(iScreens[i]->iScreenWidth*iScreens[i]->iScreenHeight*4);
+					if(!iScreens[i]->iRotateBuffer)
+						return KErrNoMemory;
+					}
 				break;
 			case 180:
-				iScreens[0]->iScreenRotation = EEmulatorFlipInvert;
+				for (i = 0; i < screens; ++i)
+					{
+					iScreens[i]->iScreenRotation = EEmulatorFlipInvert;
+					iScreens[i]->iRotateBuffer = (DWORD*)malloc(iScreens[i]->iScreenWidth*iScreens[i]->iScreenHeight*4);
+					if(!iScreens[i]->iRotateBuffer)
+						return KErrNoMemory;
+					}
 				break;
 			case 270:
-				iScreens[0]->iScreenRotation = EEmulatorFlipLeft;
+				for (i = 0; i < screens; ++i)
+					{
+					iScreens[i]->iScreenRotation = EEmulatorFlipLeft;
+					iScreens[i]->iRotateBuffer = (DWORD*)malloc(iScreens[i]->iScreenWidth*iScreens[i]->iScreenHeight*4);
+					if(!iScreens[i]->iRotateBuffer)
+						return KErrNoMemory;
+					}
 				break;
 			default:
 				r = KErrArgument;
 			}
 		if (r != KErrNone)
 			return r;
+			
+		iInitialFlipMsg = TStdScanCode(ESpecialKeyBase + iScreens[0]->iScreenRotation);
 		
 		beg = skipws(next);
 		
@@ -1288,7 +1378,7 @@ TInt DWinsUi::SetupProperties(TInt aId)
 		TInt key = iKeyboard.GetEPOCKeyCode(TPtrC8((const TUint8*)beg, strlen(beg)));
 		if (key == KErrNotFound)
 			return key;
-		iInitialFlipMsg = key;
+		//Currently no use for key
 		}
 
 	//EmulatorControl messages are a bit like virtual keys
@@ -1766,35 +1856,8 @@ TBool DWinsUi::OnDigitizer(TInt aX, TInt aY) const
 	{
 	if (!iDigitizerEnabled)
 		return EFalse;
-	switch(CurrentFlipState[0])
-		{
-		case EEmulatorFlipRestore:
-			{
-			aX -= iDigitizerOffsetX;
-			aY -= iDigitizerOffsetY;
-			break;
-			}
-		case EEmulatorFlipInvert:
-			{
-			aX -= systemIni->iScreens[0]->iScreenWidth - iDigitizerOffsetX - iDigitizerWidth;
-			aY -= systemIni->iScreens[0]->iScreenHeight - iDigitizerOffsetY - iDigitizerHeight;
-			break;
-			}
-		case EEmulatorFlipRight:
-			{
-			TInt oldY = aY;
-			aY = aX - (systemIni->iScreens[0]->iScreenHeight - iDigitizerOffsetY - iDigitizerHeight);
-			aX = oldY - iDigitizerOffsetX;
-			break;
-			}
-		case EEmulatorFlipLeft:
-			{
-			TInt oldY = aY;
-			aY = aX - iDigitizerOffsetY;
-			aX = oldY - (systemIni->iScreens[0]->iScreenWidth - iDigitizerOffsetX - iDigitizerWidth);
-			break;
-			}
-		}
+	aX -= iDigitizerOffsetX;
+	aY -= iDigitizerOffsetY;
 	return (TUint(aX) < TUint(iDigitizerWidth) && TUint(aY) < TUint(iDigitizerHeight));
 	}
 
@@ -1824,6 +1887,7 @@ LOCAL_C void addMouseEvent(TRawEvent::TType aType,TInt aXpos,TInt aYpos,TInt aZp
 		TheEventQ.Add(v);
 		}
 	}
+	
 LOCAL_C void addKeyEvent(TRawEvent::TType aType,TInt aKey)
 	{
 	TRawEvent v;
@@ -1890,17 +1954,16 @@ LOCAL_C void SwitchConfiguration(TInt aData, TBool aSendFlipKey = ETrue)
 		SendMessage(TheWin[i], WM_FLIP_MESSAGE, systemIni->iScreens[i]->iScreenRotation,0);
 		}
 
-	//pass on the orientation key to the windows server
+	//Broadcast new orientation to Symbian OS
 	if (aSendFlipKey)
 		{
 		if (!WinsGuiPowerHandler->iStandby)
 			{
 			addKeyEvent(TRawEvent::EKeyDown, systemIni->iInitialFlipMsg);
-			addKeyEvent(TRawEvent::EKeyUp, systemIni->iInitialFlipMsg);
 			}
 		else
 			{
-			//remember the flip message so we can send it to the window server when we come out of standby
+			//remember so we can broadcast new orientation to Symbian OS
 			SavedFlipMessage = systemIni->iInitialFlipMsg;
 			}
 		}
@@ -2135,9 +2198,12 @@ LOCAL_C void MultiChildWndPointer(TUint aMessage,TInt aXpos,TInt aYpos, TInt aZ,
 // Handle a multi-touch pointer event in the Symbian OS screen window 
 //
 	{
+	TInt phoneX, phoneY;
 	TRawEvent::TType eventType=TRawEvent::ENone;
 	CHAR buf[50];
 	
+	systemIni->TranslateMouseCoords(CurrentFlipState[0], aXpos, aYpos, systemIni->iScreens[0]->iScreenWidth, systemIni->iScreens[0]->iScreenHeight, phoneX, phoneY);
+
 	if (aZ <= TheMultiTouch->iZMaxRange) //negative
 		{
 		eventType = TRawEvent::EPointer3DOutOfRange;
@@ -2146,7 +2212,7 @@ LOCAL_C void MultiChildWndPointer(TUint aMessage,TInt aXpos,TInt aYpos, TInt aZ,
 		}
 	else 
 		{
-		wsprintf((LPTSTR)buf, (LPCTSTR)TEXT("%d: %d,%d,%d"), aPointerId, aXpos,aYpos,aZ);
+		wsprintf((LPTSTR)buf, (LPCTSTR)TEXT("%d: %d,%d,%d"), aPointerId, phoneX,phoneY,aZ);
 		SendMessage(hwndStatus, SB_SETTEXT, aPointerId , (LPARAM)(buf));					
 		switch (aMessage)
 	    	{
@@ -2189,7 +2255,7 @@ LOCAL_C void MultiChildWndPointer(TUint aMessage,TInt aXpos,TInt aYpos, TInt aZ,
 
 	if (!WinsGuiPowerHandler->iStandby)
 		{
-		addMouseEvent(eventType, aXpos, aYpos, aZ, aPointerId);
+		addMouseEvent(eventType, phoneX, phoneY, aZ, aPointerId);
 		}
 	}
 
@@ -2252,7 +2318,9 @@ LOCAL_C void ChildWndPointer(TUint message,TInt aXpos,TInt aYpos)
 		}
 	if (!WinsGuiPowerHandler->iStandby)
 		{
-		addMouseEvent(eventType, aXpos, aYpos);
+		TInt newX, newY;
+		systemIni->TranslateMouseCoords(CurrentFlipState[0], aXpos, aYpos, systemIni->iScreens[0]->iScreenWidth, systemIni->iScreens[0]->iScreenHeight, newX, newY);
+		addMouseEvent(eventType, newX, newY);
 		}
 	}
 
@@ -2546,6 +2614,7 @@ TInt APIENTRY childWinProc(HWND hWnd,TUint message,TUint wParam,TUint lParam)
 LOCAL_C TBool PaintWindowFromBuffer(HWND hWnd)
 	{
 	TInt screenNumber = ScreenFromHWND(hWnd,TheChildWin);
+	
 	if (TUint(screenNumber) >= TUint(masterIni->iBufferSet.Count()))
 		{
 		return EFalse;
@@ -2559,27 +2628,82 @@ LOCAL_C TBool PaintWindowFromBuffer(HWND hWnd)
 
 	TInt   frameOffset = masterIni->iBufferSet[screenNumber].iScreenBuffer.iDisplayBufferOffset;
 	displayBuffer=LPVOID(frameOffset+(char*)displayBuffer);
+	
+	LPBITMAPINFO info = (LPBITMAPINFO)&masterIni->iBufferSet[screenNumber].iInfo;
+	WORD width = (WORD)info->bmiHeader.biWidth;
+	WORD height = (WORD)-info->bmiHeader.biHeight;	// stored -ve in info
+	LPVOID pDisplayBuffer;
+	
+	switch(CurrentFlipState[screenNumber])
+	{
+	case EEmulatorFlipRestore:
+		{
+		//No rotation to do.
+		pDisplayBuffer = displayBuffer;
+		}
+	break;
+
+	case EEmulatorFlipInvert:
+		{	
+		//rotate display buffer: Map phone display onto window buffer which has been rotated
+		DWORD* pRotatedPtr = systemIni->iScreens[screenNumber]->iRotateBuffer;
+		for (int y = 0; y < height; y++)
+			for (int x = 0; x < width; x++)
+				*pRotatedPtr++ = *((DWORD*)(displayBuffer) + ((height - y - 1) * (width)) + (width - x -1));
+
+		pDisplayBuffer = systemIni->iScreens[screenNumber]->iRotateBuffer;
+		}
+	break;
+	
+	case EEmulatorFlipLeft:
+		{
+		//rotate display buffer: Map phone display onto window buffer which has been rotated
+		DWORD* pRotatedPtr = systemIni->iScreens[screenNumber]->iRotateBuffer;
+		
+		for (int y = 0; y < height; y++)
+			for (int x = 0; x < width; x++)
+				*pRotatedPtr++ = *((DWORD*)(displayBuffer) + (x * height) + (height - y -1));
+				
+		pDisplayBuffer = systemIni->iScreens[screenNumber]->iRotateBuffer;
+		}
+	break;
+	
+	case EEmulatorFlipRight:
+		{
+		//rotate display buffer: Map phone display onto window buffer which has been rotated
+		DWORD* pRotatedPtr = systemIni->iScreens[screenNumber]->iRotateBuffer;
+		
+		for (int y = 0; y < height; y++)
+			for (int x = 0; x < width; x++)
+				*pRotatedPtr++ = *((DWORD*)(displayBuffer) + ((width - x - 1) * (height)) + y);
+				
+		pDisplayBuffer = systemIni->iScreens[screenNumber]->iRotateBuffer;
+		}
+	break;
+	
+	default:
+		{
+		Kern::Printf("Error PaintWindowFromBuffer - unknown orientation");
+		return EFalse;
+		}
+	}
 
 	PAINTSTRUCT ps;
 	BeginPaint(hWnd, &ps);
 
-	// Paint directly from the buffer to the window
-	LPBITMAPINFO info = (LPBITMAPINFO)&masterIni->iBufferSet[screenNumber].iInfo;
-	WORD width = (WORD)info->bmiHeader.biWidth;
-	WORD height = (WORD)-info->bmiHeader.biHeight;	// stored -ve in info
-	SetDIBitsToDevice(ps.hdc,
-						0, 0, 	// Dst X, Y
+	SetDIBitsToDevice(	ps.hdc,
+						0, 0, 			// Dst X, Y
 						width, height,	// Src W, H
-						0, 0,	// Src X, Y
-						0,		// Src offset to first line
-						height,	// Src lines available
-						displayBuffer,	// Src pointer to pixels
+						0, 0,			// Src X, Y
+						0,				// Src offset to first line
+						height,			// Src lines available
+						pDisplayBuffer,	// Src pointer to pixels
 						info,			// Src info
 						DIB_RGB_COLORS);
 
 	EndPaint(hWnd, &ps);
 
-	return TRUE;
+	return ETrue;
 	}
 
 
@@ -2973,7 +3097,6 @@ TInt APIENTRY winProc(HWND hWnd,TUint message,TUint wParam,TUint lParam)
 				if (SavedFlipMessage)
 					{
 					addKeyEvent(TRawEvent::EKeyDown, SavedFlipMessage);
-					addKeyEvent(TRawEvent::EKeyUp, SavedFlipMessage);
 					SavedFlipMessage = 0;
 					}
 				}
@@ -3476,7 +3599,6 @@ DWORD WINAPI KernelWindowThread(LPVOID aArg)
 	if (systemIni->iInitialFlipMsg != 0)
 		{
 		addKeyEvent(TRawEvent::EKeyDown,systemIni->iInitialFlipMsg);
-		addKeyEvent(TRawEvent::EKeyUp,systemIni->iInitialFlipMsg);
 		}
 
 	SetFocus(TheWin[0]);
@@ -4395,7 +4517,11 @@ TInt DMasterIni::Create()
 	WinsGuiPowerHandler = DWinsGuiPowerHandler::New();
 	if (!WinsGuiPowerHandler)
 		return KErrNoMemory;
-
+		
+	WinsGuiRotateHandler = DWinsGuiRotateHandler::New();
+	if (!WinsGuiRotateHandler)
+		return KErrNoMemory;
+	
 	TheWin=new HWND[systemIni->iScreens.Count()];
 	TheChildWin=new HWND[systemIni->iScreens.Count()];
 	TheScreenBitmap=new HBITMAP[systemIni->iScreens.Count()];
@@ -4403,7 +4529,6 @@ TInt DMasterIni::Create()
 
 	if(!TheWin || !TheChildWin || !TheScreenBitmap || !CurrentFlipState)
 		return KErrNoMemory;
-	memset(CurrentFlipState,EEmulatorFlipRestore,systemIni->iScreens.Count());
 
 	TBufferSet buffer;
 	buffer.iDisplayDriverCount = 0;
@@ -4423,6 +4548,8 @@ TInt DMasterIni::Create()
 		r = masterIni->iBufferSet.Append(buffer);
 		if (r != KErrNone)
 			return r;
+		
+		CurrentFlipState[i] = pScr->iScreenRotation;
 		}
 
 	if (CreateWin32Thread(EThreadEvent, &KernelWindowThread, NULL, ETrue) == NULL)

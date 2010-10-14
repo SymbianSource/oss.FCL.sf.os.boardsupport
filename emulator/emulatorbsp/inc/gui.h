@@ -286,6 +286,7 @@ public:
 	TInt  iModeDepths[KEmulMaxNumModes];
 	TInt iCompositionBuffers;
 	TInt iRefreshRateHz;
+	DWORD* iRotateBuffer;
 	/**
 	The viewport owned by the screen
 	*/
