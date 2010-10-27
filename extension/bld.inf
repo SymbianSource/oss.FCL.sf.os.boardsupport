@@ -1,0 +1,46 @@
+// Copyright (c) 2010 Nokia Corporation and/or its subsidiary(-ies).
+// All rights reserved.
+// This component and the accompanying materials are made available
+// under the terms of the License "Eclipse Public License v1.0"
+// which accompanies this distribution, and is available
+// at the URL "http://www.eclipse.org/legal/epl-v10.html".
+//
+// Initial Contributors:
+// Nokia Corporation - initial contribution.
+//
+// Contributors:
+//
+// Description:
+// 
+
+PRJ_EXPORTS
+h2_genbootinc.meta 	/epoc32/tools/makefile_templates/base/h2_genbootinc.meta
+h2_genbootinc.mk 	/epoc32/tools/makefile_templates/base/h2_genbootinc.mk
+h2_restricted_coreldr.meta 	/epoc32/tools/makefile_templates/base/h2_restricted_coreldr.meta
+h2_restricted_coreldr.mk 	/epoc32/tools/makefile_templates/base/h2_restricted_coreldr.mk
+h4_genbootinc.meta 		/epoc32/tools/makefile_templates/base/h4_genbootinc.meta
+h4_genbootinc.mk 		/epoc32/tools/makefile_templates/base/h4_genbootinc.mk
+h4_restricted_coreldr.meta 	/epoc32/tools/makefile_templates/base/h4_restricted_coreldr.meta
+h4_restricted_coreldr.mk 	/epoc32/tools/makefile_templates/base/h4_restricted_coreldr.mk
+h4_restricted_on_coreldr.meta 	/epoc32/tools/makefile_templates/base/h4_restricted_on_coreldr.meta
+h4_restricted_on_coreldr.mk 	/epoc32/tools/makefile_templates/base/h4_restricted_on_coreldr.mk
+h4_restricted_on_miniboot.meta 	/epoc32/tools/makefile_templates/base/h4_restricted_on_miniboot.meta
+h4_restricted_on_miniboot.mk	/epoc32/tools/makefile_templates/base/h4_restricted_on_miniboot.mk
+ne1_tb_restricted_coreldr.meta 	/epoc32/tools/makefile_templates/base/ne1_tb_restricted_coreldr.meta
+ne1_tb_restricted_coreldr.mk 		/epoc32/tools/makefile_templates/base/ne1_tb_restricted_coreldr.mk
+ne1_tb_genbootinc.meta				/epoc32/tools/makefile_templates/base/ne1_tb_genbootinc.meta
+ne1_tb_genbootinc.mk 				/epoc32/tools/makefile_templates/base/ne1_tb_genbootinc.mk
+lab_restricted_miniboot.meta		/epoc32/tools/makefile_templates/base/lab_restricted_miniboot.meta
+lab_restricted_miniboot.mk		/epoc32/tools/makefile_templates/base/lab_restricted_miniboot.mk
+nand_fbr_offset.meta 		/epoc32/tools/makefile_templates/base/nand_fbr_offset.meta
+nand_fbr_offset.mk 		/epoc32/tools/makefile_templates/base/nand_fbr_offset.mk
+omap3_genbootinc.meta		/epoc32/tools/makefile_templates/base/omap3_genbootinc.meta
+omap3_genbootinc.mk		/epoc32/tools/makefile_templates/base/omap3_genbootinc.mk
+omap3_restricted_coreldr.meta		/epoc32/tools/makefile_templates/base/omap3_restricted_coreldr.meta
+omap3_restricted_coreldr.mk		/epoc32/tools/makefile_templates/base/omap3_restricted_coreldr.mk
+omap3_restricted_coreldr.flm		/epoc32/tools/makefile_templates/base/omap3_restricted_coreldr.flm
+omap3_restricted_coreldr.xml		/epoc32/tools/makefile_templates/base/omap3_restricted_coreldr.xml
+lab_restricted_miniboot.flm		/epoc32/tools/makefile_templates/base/lab_restricted_miniboot.flm
+lab_restricted_miniboot.xml		/epoc32/tools/makefile_templates/base/lab_restricted_miniboot.xml
+ne1_tb_restricted_coreldr.flm		/epoc32/tools/makefile_templates/base/ne1_tb_restricted_coreldr.flm
+ne1_tb_restricted_coreldr.xml		/epoc32/tools/makefile_templates/base/ne1_tb_restricted_coreldr.xml

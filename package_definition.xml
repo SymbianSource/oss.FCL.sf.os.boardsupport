@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <SystemDefinition schema="3.0.0">
   <package id="boardsupport" name="Board Support" levels="bsp test 2 3 config">
+    	<component id="extension" name="Boardsupport Extension Makefiles" purpose="mandatory">
+        <unit bldFile="extension"/>
+      </component>
     <collection id="emulator" name="Emulator" level="bsp">
       <component id="emulatorbsp" name="Emulator BSP" purpose="optional">
         <unit bldFile="emulator/emulatorbsp" mrp="emulator/emulatorbsp/base_wins.mrp"/>
