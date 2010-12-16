@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SystemDefinition xmlns:sf="http://www.symbian.org/system-definition" schema="3.0.0" id-namespace="http://www.nokia.com/schema/drd/system-definition">
+ <package id="sf:boardsupport" name="Board Support" levels="bsp test 2 3 config">
+    <collection id="sf:emulator" name="Emulator" level="bsp">
+     <component id="unistore2emulatorsupport" name="UniStore2 Emulator Support" filter="gt" introduced="^2" purpose="optional">
+      <unit bldFile="../../emulator/unistore2emulatorsupport" mrp="../../emulator/unistore2emulatorsupport/base_wins_unistore2.mrp"/>
+     </component>
+    </collection>
+    <collection id="omaph4" name="OMAP H4" level="bsp" before="sf:haitest">
+     <component id="omapusbhotgdrivers" name="OMAP USB Host and OTG Controller Drivers" introduced="^3" filter="gt" purpose="optional">
+      <unit bldFile="../../omaph4/omapusbhotgdrivers" mrp="../../omaph4/omapusbhotgdrivers/base_omaph4hrp_usbhostotg_usbware.mrp"/>
+     </component>
+     <component id="omaph4bsp" name="OMAP H4 BSP" purpose="optional">
+      <unit bldFile="../../omaph4/omaph4bsp/h4" mrp="../../omaph4/omaph4bsp/h4/base_omaph4hrp.mrp"/>
+     </component>
+     <component id="h4bootloader" name="H4 Boot Loader" introduced="9.1" purpose="optional">
+      <unit mrp="../../omaph4/h4bootloader/base_omaph4hrp_bootldr.mrp" bldFile="../../omaph4/h4bootloader"/>
+     </component>
+     <component id="omaph4flexible" name="OMAP H4 Flexible" introduced="^3" purpose="optional">
+      <unit bldFile="../../omaph4/omaph4bsp/h4/flexible" mrp="../../omaph4/omaph4bsp/h4/flexible/base_omaph4hrp_flexible.mrp"/>
+     </component>
+     <component id="omaph4minienvbootloader" name="OMAP H4 Mini Environment Boot Loader" introduced="9.2" purpose="optional">
+      <unit mrp="../../omaph4/omaph4minienvbootloader/base_omaph4hrp_mebootldr.mrp" bldFile="../../omaph4/omaph4minienvbootloader"/>
+     </component>
+     <component id="omaph4unistore2" name="OMAP H4 Unistore2" filter="gt" introduced="9.2" purpose="optional">
+      <unit bldFile="../../omaph4/omaph4unistore2" mrp="../../omaph4/omaph4unistore2/base_omaph4hrp_unistore2.mrp"/>
+     </component>
+     <component id="omaph4sdio" name="OMAP H4 SDIO" filter="gt" introduced="9.2" purpose="optional">
+      <unit bldFile="../../omaph4/omaph4sdio" mrp="../../omaph4/omaph4sdio/base_omaph4hrp_sdio.mrp"/>
+     </component>
+    </collection>
+    <collection id="omap3variants" name="OMAP3 Variants" level="bsp" before="sf:haitest">
+     <component id="tiomap3bsp" name="TI OMAP3 BSP" introduced="^3" purpose="optional">
+      <unit bldFile="../../omap3variants/tiomap3bsp/variant/34xx_sdp" mrp="../../omap3variants/tiomap3bsp/base_tiomap3.mrp"/>
+     </component>
+     <component id="tiomap3unistore2" name="TI OMAP3 UniStore2" filter="gt" introduced="^3" purpose="optional">
+      <unit bldFile="../../omap3variants/tiomap3bsp/variant/34xx_sdp_restricted/unistore2" mrp="../../omap3variants/tiomap3bsp/base_tiomap3_unistore2.mrp"/>
+     </component>
+     <component id="omap3h6flexible" name="OMAP3 H6 Flexible" introduced="^3" purpose="optional">
+      <unit bldFile="../../omap3variants/tiomap3bsp/variant/34xx_sdp/flexible" mrp="../../omap3variants/tiomap3bsp/variant/34xx_sdp/flexible/base_tiomap3_flexible.mrp"/>
+     </component>
+     <component id="omap3h6uiiflexible" name="OMAP3 H6 UniStore2 Flexible" filter="gt" introduced="^3" purpose="optional">
+      <unit bldFile="../../omap3variants/tiomap3bsp/variant/34xx_sdp_restricted/unistore2/flexible" mrp="../../omap3variants/tiomap3bsp/variant/34xx_sdp_restricted/unistore2/flexible/base_tiomap3_unistore2_flexible.mrp"/>
+     </component>
+     <component id="tiomap3h6sdio" name="TI OMAP3 H6 SDIO" filter="gt" introduced="^3" purpose="optional">
+      <unit bldFile="../../omap3variants/tiomap3bsp/variant/34xx_sdp_restricted/sdio" mrp="../../omap3variants/tiomap3bsp/variant/34xx_sdp_restricted/sdio/base_tiomap3_sdio.mrp"/>
+     </component>
+     <component id="tiomap3labbsp" name="TI OMAP3 LAB Baseport" filter="gt" introduced="^3" purpose="optional">
+      <unit bldFile="../../omap3variants/tiomap3bsp/variant/lab" mrp="../../omap3variants/tiomap3bsp/variant/lab/base_tiomap3_lab.mrp"/>
+     </component>
+     <component id="tiomap3labsdio" name="TI OMAP3 LAB SDIO" filter="gt" introduced="^3" purpose="optional">
+      <unit bldFile="../../omap3variants/tiomap3bsp/variant/lab_restricted/sdio" mrp="../../omap3variants/tiomap3bsp/variant/lab_restricted/sdio/base_tiomap3_lab_sdio.mrp"/>
+     </component>
+     <component id="tiomap3labuii" name="TI OMAP3 LAB UniStore2" filter="gt" introduced="^3" purpose="optional">
+      <unit bldFile="../../omap3variants/tiomap3bsp/variant/lab_restricted/unistore2" mrp="../../omap3variants/tiomap3bsp/variant/lab_restricted/unistore2/base_tiomap3_lab_unistore2.mrp"/>
+     </component>
+    </collection>
+    <collection id="naviengine" name="NaviEngine Baseport" level="bsp" before="sf:haitest">
+     <component id="naviengineusbhcd" name="NaviEngine USB Host Controller Driver" introduced="^3" filter="gt" purpose="optional">
+      <unit bldFile="../../naviengine/naviengineusbhcd" mrp="../../naviengine/naviengineusbhcd/base_naviengine_usbhost.mrp"/>
+     </component>
+     <component id="navienginebsp" name="NaviEngine BSP" introduced="^3" filter="gt" purpose="optional">
+      <unit version="Built" bldFile="../../naviengine/navienginebsp/ne1_tb" mrp="../../naviengine/navienginebsp/base_naviengine.mrp"/>
+     </component>
+     <component id="navienginebspflexible" name="NaviEngine BSP flexible" introduced="^3" filter="gt" purpose="optional">
+      <unit version="Built" bldFile="../../naviengine/navienginebspflexible" mrp="../../naviengine/navienginebspflexible/base_naviengine_flexible.mrp"/>
+     </component>
+     <component id="navienginebootldr" name="NaviEngine Boot Loader" introduced="^3" filter="gt" purpose="optional">
+      <unit version="Built" bldFile="../../naviengine/navienginebootldr" mrp="../../naviengine/navienginebootldr/base_ne1_tb_bootldr.mrp"/>
+     </component>
+     <component id="naviengineunistore2" name="NaviEngine UniStore2" filter="gt" introduced="^3" purpose="optional">
+      <unit version="Built" bldFile="../../naviengine/naviengineunistore2" mrp="../../naviengine/naviengineunistore2/base_nec_naviengine_unistore2.mrp"/>
+     </component>
+     <component id="naviengineunistore2flex" name="NaviEngine UniStore2 Flexible" filter="gt" introduced="^3" purpose="optional">
+      <unit version="Built" bldFile="../../naviengine/naviengineunistore2flex" mrp="../../naviengine/naviengineunistore2flex/base_nec_naviengine_unistore2_flexible.mrp"/>
+     </component>
+    </collection>
+   <collection id="sf:boardsupport_info" name="Board Support Info" level="config">
+   <component id="nokia_boardsupport_metadata" name="Nokia Board Support Metadata" class="config" introduced="^2" purpose="development" target="desktop">
+    <unit mrp="nokia_boardsupport_metadata.mrp"/>
+   </component>
+  </collection>
+ </package>
+</SystemDefinition>
